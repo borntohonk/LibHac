@@ -1,0 +1,26 @@
+name: Build jobs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  main:
+    strategy:
+      fail-fast: false
+    name: hactoolnet-linux
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build hactoolnet
+        run: |
+          apt update && \
+          apt install -y clang gcc && \
+          chmod +x ./build.sh
+          ./build.sh appveyorbuild --noreflection
+      - uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: hactoolnet-linux
+          path: ./artifacts/hactoolnet*
